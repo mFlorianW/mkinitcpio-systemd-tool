@@ -64,13 +64,15 @@ do_tinysshd_keys() {
     
     local keydir=/etc/tinyssh/sshkeydir
     
-    mkdir -p $keydir
-    chmod go-rwx $keydir 
+    if [[ -d "$keydir" ]]; then
+        plain "removig existing $keydir"
+        rm -rf $keydir
+    fi
     
     plain "convert openssh to tinysshd host key ed25519"
     
-    run_command tinyssh-convert -f /etc/ssh/ssh_host_ed25519_key -d $keydir
-	
+    run_command tinyssh-convert $keydir < /etc/ssh/ssh_host_ed25519_key	
+
 }
 
 # location of server host keys used by openssh
